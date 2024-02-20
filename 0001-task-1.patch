@@ -1,0 +1,64 @@
+From 4ec2b2591129ad07af1856f41dbe3f80e1acfb26 Mon Sep 17 00:00:00 2001
+From: vincenzo-sorcigli <57498723+vincenzo-sorcigli@users.noreply.github.com>
+Date: Mon, 19 Feb 2024 19:09:30 -0500
+Subject: [PATCH] task 1
+
+---
+ .gitignore |  1 +
+ client3.py | 17 +++++++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+ create mode 100644 .gitignore
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..a979ee7
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1 @@
++/venv
+\ No newline at end of file
+diff --git a/client3.py b/client3.py
+index 3fc09b7..e459462 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,22 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    
++    # avg of bid and ask, rounded to 2 decimals
++    # price = round( (bid_price+ask_price)/2, 2 )
++    price = (bid_price+ask_price)/2
++    
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+     """ ------------- Update this function ------------- """
+-    return 1
++    
++    if price_b == 0:
++        return # don't divide by 0
++    
++    return price_a/price_b
+ 
+ 
+ # Main
+@@ -51,9 +59,10 @@ if __name__ == "__main__":
+     for _ in iter(range(N)):
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+-        """ ----------- Update to get the ratio --------------- """
++        prices = []
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            prices.append(price)
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(prices[0], prices[1]))
+-- 
+2.42.0.windows.2
+
